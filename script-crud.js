@@ -1,18 +1,12 @@
 const taskListContainer = document.querySelector('.app__section-task-list');
+
 const formTask = document.querySelector('.app__form-add-task');
 const toggleFormTaskBtn = document.querySelector('.app__button--add-task'); // toggle -> alternar visualização, form visivel
 const formLabel = document.querySelector('.app__form-label');
 
-let tarefas = [
-    {
-        descricao: 'Tarefa Concluída',
-        concluida:  true
-    },
-    {
-        descricao: 'Tarefa Pendente',
-        concluida:  false
-    }
-];
+const textarea = document.querySelector('.app__form-textarea')
+
+let tarefas = [];
 
 const taskIconSvg = `
 <svg class="app_section-task-icon-status" width="24" height="24" viewBox="0 0 24 24"
@@ -50,3 +44,14 @@ toggleFormTaskBtn.addEventListener('click', () => {
     formLabel.textContent = 'Adicionando tarefa';
     formTask.classList.toggle('hidden')
 }); // quando evento de click form executado, vai ser executado uma função
+
+formTask.addEventListener('submit', (evento) => {
+    evento.preventDefault();
+    const task = {
+        descricao: textarea.value,
+        concluida: false
+    }
+    tarefas.push(task);
+    const taskItem = createTask(task);
+    taskListContainer.append(taskItem) // append para mostrar na pag HTML
+})
