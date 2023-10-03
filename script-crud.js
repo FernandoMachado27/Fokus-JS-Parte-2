@@ -69,3 +69,6 @@ btnCancelFormTask.addEventListener('click',  () => {
     formTask.classList.add('hidden');
     limparForm();
 })
+
+localStorage.setItem('quantidade', 10); // enviando para o localStorage - qtde = key, salvo localmente
+console.log(localStorage.getItem('quantidade')); // buscando do localStorage
