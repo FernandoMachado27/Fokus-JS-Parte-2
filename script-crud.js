@@ -1,15 +1,14 @@
 const taskListContainer = document.querySelector('.app__section-task-list');
 
-let tarefas = [
-    {
-        descricao: 'Tarefa Concluída',
-        concluida:  true
-    },
-    {
-        descricao: 'Tarefa Pendente',
-        concluida:  false
-    }
-];
+const formTask = document.querySelector('.app__form-add-task');
+const toggleFormTaskBtn = document.querySelector('.app__button--add-task'); // toggle -> alternar visualização, form visivel
+const formLabel = document.querySelector('.app__form-label');
+
+const textarea = document.querySelector('.app__form-textarea');
+
+const btnCancelFormTask = document.querySelector('.app__form-footer__button--cancel');
+
+let tarefas = [];
 
 const taskIconSvg = `
 <svg class="app_section-task-icon-status" width="24" height="24" viewBox="0 0 24 24"
@@ -20,6 +19,11 @@ const taskIconSvg = `
         fill="#01080E" />
 </svg>
 `
+const limparForm = () => {
+    textarea.value = ''; // toda vez que a função for chamada o campo de texto virá vazio
+    formTask.classList.add('hidden');
+}
+
 function createTask(tarefa) {
     const li = document.createElement('li'); // criando item de lista no js para jogar no html
     li.classList.add('app__section-task-list-item'); // adicionando uma claase para esta lista
@@ -42,3 +46,29 @@ tarefas.forEach(task => {
     const taskItem = createTask(task);
     taskListContainer.appendChild(taskItem);
 });
+
+toggleFormTaskBtn.addEventListener('click', () => {
+    formLabel.textContent = 'Adicionando tarefa';
+    formTask.classList.toggle('hidden')
+}); // quando evento de click form executado, vai ser executado uma função
+
+formTask.addEventListener('submit', (evento) => {
+    evento.preventDefault();
+    const task = {
+        descricao: textarea.value,
+        concluida: false
+    }
+    tarefas.push(task);
+    const taskItem = createTask(task);
+    taskListContainer.append(taskItem) // append para mostrar na pag HTML
+
+    limparForm();
+})
+
+btnCancelFormTask.addEventListener('click',  () => {
+    formTask.classList.add('hidden');
+    limparForm();
+})
+
+localStorage.setItem('quantidade', 10); // enviando para o localStorage - qtde = key, salvo localmente
+console.log(localStorage.getItem('quantidade')); // buscando do localStorage
