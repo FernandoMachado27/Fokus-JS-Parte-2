@@ -4,7 +4,9 @@ const formTask = document.querySelector('.app__form-add-task');
 const toggleFormTaskBtn = document.querySelector('.app__button--add-task'); // toggle -> alternar visualização, form visivel
 const formLabel = document.querySelector('.app__form-label');
 
-const textarea = document.querySelector('.app__form-textarea')
+const textarea = document.querySelector('.app__form-textarea');
+
+const btnCancelFormTask = document.querySelector('.app__form-footer__button--cancel');
 
 let tarefas = [];
 
@@ -17,6 +19,11 @@ const taskIconSvg = `
         fill="#01080E" />
 </svg>
 `
+const limparForm = () => {
+    textarea.value = ''; // toda vez que a função for chamada o campo de texto virá vazio
+    formTask.classList.add('hidden');
+}
+
 function createTask(tarefa) {
     const li = document.createElement('li'); // criando item de lista no js para jogar no html
     li.classList.add('app__section-task-list-item'); // adicionando uma claase para esta lista
@@ -54,4 +61,11 @@ formTask.addEventListener('submit', (evento) => {
     tarefas.push(task);
     const taskItem = createTask(task);
     taskListContainer.append(taskItem) // append para mostrar na pag HTML
+
+    limparForm();
+})
+
+btnCancelFormTask.addEventListener('click',  () => {
+    formTask.classList.add('hidden');
+    limparForm();
 })
