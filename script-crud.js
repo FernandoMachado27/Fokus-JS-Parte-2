@@ -8,6 +8,8 @@ const textarea = document.querySelector('.app__form-textarea');
 
 const btnCancelFormTask = document.querySelector('.app__form-footer__button--cancel');
 
+const taskAtiveDescription = document.querySelector('.app__section-active-task-description');
+
 const localStorageTarefas = localStorage.getItem('tarefas'); // puxa algo salvo do localStorage com get
 
 let tarefas = localStorageTarefas ? JSON.parse(localStorageTarefas) : []; // condicional ternaria, se tiver uma tarefa salva puxa string e transforma em obj js, se não fica como vazio
@@ -21,6 +23,31 @@ const taskIconSvg = `
         fill="#01080E" />
 </svg>
 `
+
+let tarefaSelecionada = null;
+let itemTarefaSelecionada = null;
+
+const selecionaTarefa = (tarefa, elemento) => {
+
+    document.querySelectorAll('.app__section-task-list-item-active').forEach(function
+    (button) {
+        button.classList.remove('app_section-task-list-item-active');
+    })
+
+    if(tarefaSelecionada == tarefa) {
+        taskAtiveDescription.textContent = null;
+        itemTarefaSelecionada = null;
+        tarefaSelecionada = null;
+        return
+    }
+
+    tarefaSelecionada = tarefa;
+    itemTarefaSelecionada = elemento;
+    taskAtiveDescription.textContent = tarefa.descricao;
+    elemento.classList.add('app__section-task-list-item-active');
+
+} // função para mostrar tarefa
+
 const limparForm = () => {
     textarea.value = ''; // toda vez que a função for chamada o campo de texto virá vazio
     formTask.classList.add('hidden'); // oculta o formulário
@@ -37,6 +64,10 @@ function createTask(tarefa) {
     paragraph.classList.add('app__section-task-list-item-description');
 
     paragraph.textContent = tarefa.descricao;
+
+    li.onclick = () => {
+        selecionaTarefa(tarefa, li);
+    } // quando a tarefa receber um click, vai chamar a função de selecionar tarefa
 
     li.appendChild(svgIcon);
     li.appendChild(paragraph);
