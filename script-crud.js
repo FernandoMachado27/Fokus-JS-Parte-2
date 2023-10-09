@@ -65,9 +65,22 @@ function createTask(tarefa) {
 
     paragraph.textContent = tarefa.descricao;
 
+    const button = document.createElement('button'); // botão de concluido
+
     li.onclick = () => {
         selecionaTarefa(tarefa, li);
     } // quando a tarefa receber um click, vai chamar a função de selecionar tarefa
+
+    svgIcon.addEventListener('click', (event) => {
+        button.setAttribute('disable', true);
+        event.stopPropagation();
+        li.classList.add('app__section-task-list-item-complete');
+    }) // tarefa concluida ou não
+
+    if(tarefa.concluida){
+        button.setAttribute('disable', true);
+        li.classList.add('app__section-task-list-item-complete');
+    }
 
     li.appendChild(svgIcon);
     li.appendChild(paragraph);
