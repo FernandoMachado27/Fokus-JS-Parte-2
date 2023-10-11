@@ -52,12 +52,24 @@ const selecionaTarefa = (tarefa, elemento) => {
 } // função para mostrar tarefa
 
 const limparForm = () => {
+    tarefaEmEdicao = null;
+    paragraphEmEdicao = null;
+
     textarea.value = ''; // toda vez que a função for chamada o campo de texto virá vazio
     formTask.classList.add('hidden'); // oculta o formulário
 }
 
-const selecionaTarefaParaEditar = () => { 
+const selecionaTarefaParaEditar = (tarefa, elemento) => { 
+    if(tarefaEmEdicao == tarefa){
+        limparForm();
+        return;
+    }
 
+    formLabel.textContent = 'Editando tarefa';
+    tarefaEmEdicao = tarefa;
+    paragraphEmEdicao = elemento;
+    textarea.value = tarefa.descricao;
+    formTask.classList.remove('hidden');
 }
 
 function createTask(tarefa) {
@@ -74,7 +86,7 @@ function createTask(tarefa) {
 
     const button = document.createElement('button'); // botão de concluido
 
-    button.classList.add('app__button-edit'); // criando classe
+    button.classList.add('app_button-edit'); // criando classe
     const editIcon = document.createElement('img'); // cria um elemento img na tela
     editIcon.setAttribute('src', '/imagens/edit.png'); // adiciona um valor ao elemento
 
