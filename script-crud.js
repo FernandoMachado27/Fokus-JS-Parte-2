@@ -92,6 +92,11 @@ function createTask(tarefa) {
 
     button.appendChild(editIcon);
 
+    button.addEventListener('click', (event) => {
+        event.stopPropagation();
+        selecionaTarefaParaEditar(tarefa, paragraph);
+    })
+
     li.onclick = () => {
         selecionaTarefa(tarefa, li);
     } // quando a tarefa receber um click, vai chamar a função de selecionar tarefa
@@ -135,14 +140,18 @@ const updateLocalStorage = () => {
 
 formTask.addEventListener('submit', (evento) => {
     evento.preventDefault();
-    const task = {
-        descricao: textarea.value,
-        concluida: false
+    if(tarefaEmEdicao) {
+        tarefaEmEdicao.descricao = textarea.value; // o titulo da tarefa vai receber o novo valor que o usuario escreveu
+        paragraphEmEdicao.textContent = textarea.value;
+    } else{
+        const task = {
+            descricao: textarea.value,
+            concluida: false
+        }
+        tarefas.push(task);
+        const taskItem = createTask(task);
+        taskListContainer.append(taskItem) // append para mostrar na pag HTML
     }
-    tarefas.push(task);
-    const taskItem = createTask(task);
-    taskListContainer.append(taskItem) // append para mostrar na pag HTML
-
     updateLocalStorage();
     limparForm();
 })
