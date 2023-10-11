@@ -27,6 +27,9 @@ const taskIconSvg = `
 let tarefaSelecionada = null;
 let itemTarefaSelecionada = null;
 
+let tarefaEmEdicao = null;
+let paragraphEmEdicao = null;
+
 const selecionaTarefa = (tarefa, elemento) => {
 
     document.querySelectorAll('.app__section-task-list-item-active').forEach(function
@@ -53,6 +56,10 @@ const limparForm = () => {
     formTask.classList.add('hidden'); // oculta o formulário
 }
 
+const selecionaTarefaParaEditar = () => { 
+
+}
+
 function createTask(tarefa) {
     const li = document.createElement('li'); // criando item de lista no js para jogar no html
     li.classList.add('app__section-task-list-item'); // adicionando uma claase para esta lista
@@ -66,6 +73,12 @@ function createTask(tarefa) {
     paragraph.textContent = tarefa.descricao;
 
     const button = document.createElement('button'); // botão de concluido
+
+    button.classList.add('app__button-edit'); // criando classe
+    const editIcon = document.createElement('img'); // cria um elemento img na tela
+    editIcon.setAttribute('src', '/imagens/edit.png'); // adiciona um valor ao elemento
+
+    button.appendChild(editIcon);
 
     li.onclick = () => {
         selecionaTarefa(tarefa, li);
@@ -84,6 +97,7 @@ function createTask(tarefa) {
 
     li.appendChild(svgIcon);
     li.appendChild(paragraph);
+    li.appendChild(button);
 
     return li;
 }
