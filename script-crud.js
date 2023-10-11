@@ -27,6 +27,9 @@ const taskIconSvg = `
 let tarefaSelecionada = null;
 let itemTarefaSelecionada = null;
 
+let tarefaEmEdicao = null;
+let paragraphEmEdicao = null;
+
 const selecionaTarefa = (tarefa, elemento) => {
 
     document.querySelectorAll('.app__section-task-list-item-active').forEach(function
@@ -49,8 +52,24 @@ const selecionaTarefa = (tarefa, elemento) => {
 } // função para mostrar tarefa
 
 const limparForm = () => {
+    tarefaEmEdicao = null;
+    paragraphEmEdicao = null;
+
     textarea.value = ''; // toda vez que a função for chamada o campo de texto virá vazio
     formTask.classList.add('hidden'); // oculta o formulário
+}
+
+const selecionaTarefaParaEditar = (tarefa, elemento) => { 
+    if(tarefaEmEdicao == tarefa){
+        limparForm();
+        return;
+    }
+
+    formLabel.textContent = 'Editando tarefa';
+    tarefaEmEdicao = tarefa;
+    paragraphEmEdicao = elemento;
+    textarea.value = tarefa.descricao;
+    formTask.classList.remove('hidden');
 }
 
 function createTask(tarefa) {
@@ -66,6 +85,17 @@ function createTask(tarefa) {
     paragraph.textContent = tarefa.descricao;
 
     const button = document.createElement('button'); // botão de concluido
+
+    button.classList.add('app_button-edit'); // criando classe
+    const editIcon = document.createElement('img'); // cria um elemento img na tela
+    editIcon.setAttribute('src', '/imagens/edit.png'); // adiciona um valor ao elemento
+
+    button.appendChild(editIcon);
+
+    button.addEventListener('click', (event) => {
+        event.stopPropagation();
+        selecionaTarefaParaEditar(tarefa, paragraph);
+    })
 
     li.onclick = () => {
         selecionaTarefa(tarefa, li);
@@ -84,6 +114,7 @@ function createTask(tarefa) {
 
     li.appendChild(svgIcon);
     li.appendChild(paragraph);
+    li.appendChild(button);
 
     return li;
 }
@@ -109,14 +140,18 @@ const updateLocalStorage = () => {
 
 formTask.addEventListener('submit', (evento) => {
     evento.preventDefault();
-    const task = {
-        descricao: textarea.value,
-        concluida: false
+    if(tarefaEmEdicao) {
+        tarefaEmEdicao.descricao = textarea.value; // o titulo da tarefa vai receber o novo valor que o usuario escreveu
+        paragraphEmEdicao.textContent = textarea.value;
+    } else{
+        const task = {
+            descricao: textarea.value,
+            concluida: false
+        }
+        tarefas.push(task);
+        const taskItem = createTask(task);
+        taskListContainer.append(taskItem) // append para mostrar na pag HTML
     }
-    tarefas.push(task);
-    const taskItem = createTask(task);
-    taskListContainer.append(taskItem) // append para mostrar na pag HTML
-
     updateLocalStorage();
     limparForm();
 })
