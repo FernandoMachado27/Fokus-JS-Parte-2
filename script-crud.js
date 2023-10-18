@@ -8,6 +8,8 @@ const textarea = document.querySelector('.app__form-textarea');
 
 const btnCancelFormTask = document.querySelector('.app__form-footer__button--cancel');
 
+const btnDeletar = document.querySelector('.app__form-footer__button--delete');
+
 const taskAtiveDescription = document.querySelector('.app__section-active-task-description');
 
 const localStorageTarefas = localStorage.getItem('tarefas'); // puxa algo salvo do localStorage com get
@@ -31,6 +33,9 @@ let tarefaEmEdicao = null;
 let paragraphEmEdicao = null;
 
 const selecionaTarefa = (tarefa, elemento) => {
+    if(tarefa.concluida){
+        return;
+    }
 
     document.querySelectorAll('.app__section-task-list-item-active').forEach(function
     (button) {
@@ -102,9 +107,14 @@ function createTask(tarefa) {
     } // quando a tarefa receber um click, vai chamar a função de selecionar tarefa
 
     svgIcon.addEventListener('click', (event) => {
-        button.setAttribute('disable', true);
-        event.stopPropagation();
-        li.classList.add('app__section-task-list-item-complete');
+        if(tarefa==tarefaSelecionada){
+            button.setAttribute('disable', true);
+            event.stopPropagation();
+            li.classList.add('app__section-task-list-item-complete');
+            tarefaSelecionada.concluida = true;
+            updateLocalStorage();
+        }
+
     }) // tarefa concluida ou não
 
     if(tarefa.concluida){
@@ -126,6 +136,23 @@ tarefas.forEach(task => {
 
 btnCancelFormTask.addEventListener('click',  () => {
     formTask.classList.add('hidden');
+    limparForm();
+})
+
+btnDeletar.addEventListener('click', () => {
+    if(tarefaSelecionada) {
+        const index = tarefas.indexOf(tarefaSelecionada);
+
+        if(index !== -1) {
+            tarefas.splice(index, 1);
+        }
+
+        itemTarefaSelecionada.remove();
+        tarefas.filter(t=> t!= tarefaSelecionada);
+        itemTarefaSelecionada = null;
+        tarefaSelecionada = null;
+    }
+    updateLocalStorage();
     limparForm();
 })
 
@@ -154,4 +181,13 @@ formTask.addEventListener('submit', (evento) => {
     }
     updateLocalStorage();
     limparForm();
+})
+
+document.addEventListener('TarefaFinalizada', function (e) {
+    if(tarefaSelecionada){
+        tarefaSelecionada.concluida = true;
+        itemTarefaSelecionada.classList.add('app__section-task-list-item-complete');
+        itemTarefaSelecionada.querySelector('button').setAttribute('disabled', true);
+        updateLocalStorage();
+    }
 })
