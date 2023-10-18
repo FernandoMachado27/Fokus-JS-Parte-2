@@ -8,6 +8,8 @@ const textarea = document.querySelector('.app__form-textarea');
 
 const btnCancelFormTask = document.querySelector('.app__form-footer__button--cancel');
 
+const btnDeletar = document.querySelector('.app__form-footer__button--delete');
+
 const taskAtiveDescription = document.querySelector('.app__section-active-task-description');
 
 const localStorageTarefas = localStorage.getItem('tarefas'); // puxa algo salvo do localStorage com get
@@ -134,6 +136,23 @@ tarefas.forEach(task => {
 
 btnCancelFormTask.addEventListener('click',  () => {
     formTask.classList.add('hidden');
+    limparForm();
+})
+
+btnDeletar.addEventListener('click', () => {
+    if(tarefaSelecionada) {
+        const index = tarefas.indexOf(tarefaSelecionada);
+
+        if(index !== -1) {
+            tarefas.splice(index, 1);
+        }
+
+        itemTarefaSelecionada.remove();
+        tarefas.filter(t=> t!= tarefaSelecionada);
+        itemTarefaSelecionada = null;
+        tarefaSelecionada = null;
+    }
+    updateLocalStorage();
     limparForm();
 })
 
